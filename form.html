@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submit Complaint</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* Top Navigation Bar */
+    nav {
+      background: #2563eb;
+      color: white;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    nav a {
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 10px 20px;
+      background-color: #1d4ed8;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #2563eb;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    .success {
+      margin-top: 20px;
+      text-align: center;
+      color: green;
+      font-weight: bold;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #2563eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      padding: 12px 20px;
+      background-color: #1d4ed8;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .bottom-nav a:hover {
+      background-color: #2563eb;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav>
+    <span style="font-size: 20px; font-weight: bold;">🔧 Service Complaint Buddy</span>
+    <a href="main_screen.html">🏠 Home</a>
+  </nav>
+
+  <header>
+    <h1>📝 Register a Complaint</h1>
+  </header>
+
+  <main>
+    <form id="complaintForm">
+      <label for="service">Service</label>
+      <select id="service" required>
+        <option value="">Select Service</option>
+        <option value="Washing Machine">Washing Machine</option>
+        <option value="Refrigerator">Refrigerator</option>
+        <option value="AC">AC</option>
+        <option value="Microwave">Microwave</option>
+      </select>
+
+      <label for="name">Customer Name</label>
+      <input type="text" id="name" required>
+
+      <label for="address">Address</label>
+      <input type="text" id="address" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" required>
+
+      <label for="brand">Brand</label>
+      <input type="text" id="brand" required>
+
+      <label for="warranty">In Warranty</label>
+      <select id="warranty" required>
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+
+      <label for="complaint">Complaint</label>
+      <textarea id="complaint" required></textarea>
+
+      <button type="submit">Submit Complaint</button>
+    </form>
+
+    <div class="success" id="successMessage"></div>
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <div class="bottom-nav">
+    <a href="track.html">Track Complaints</a>
+  </div>
+
+  <script>
+    document.getElementById("complaintForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Collect data
+      const complaintData = {
+        trackingId: "CMP" + Date.now(), // Unique ID
+        service: document.getElementById("service").value,
+        name: document.getElementById("name").value,
+        address: document.getElementById("address").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        brand: document.getElementById("brand").value,
+        warranty: document.getElementById("warranty").value,
+        complaint: document.getElementById("complaint").value,
+        status: "Registered"
+      };
+
+      // Store to localStorage
+      const complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+      complaints.push(complaintData);
+      localStorage.setItem("complaints", JSON.stringify(complaints));
+
+      // Confirmation
+      document.getElementById("successMessage").innerText = `Complaint registered! Your Tracking ID is: ${complaintData.trackingId}`;
+
+      // Optionally clear form
+      document.getElementById("complaintForm").reset();
+    });
+  </script>
+
+</body>
+</html>

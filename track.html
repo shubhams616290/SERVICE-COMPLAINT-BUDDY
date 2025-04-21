@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track Complaints - Service Complaint Buddy</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    nav {
+      background-color: #2563eb;
+      padding: 15px 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    header, footer {
+      background: #f0f0f0;
+      text-align: center;
+      padding: 20px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      margin-bottom: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    .info {
+      margin-bottom: 8px;
+    }
+
+    .info strong {
+      display: inline-block;
+      width: 150px;
+    }
+
+    .status {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h2>📋 Track Complaints</h2>
+    <a href="main_screen.html">🏠 Home</a>
+  </nav>
+
+  <main id="complaintList">
+    <!-- Complaints will be inserted here -->
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Service Complaint Buddy. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+    const list = document.getElementById("complaintList");
+
+    if (complaints.length === 0) {
+      list.innerHTML = `<p>No complaints submitted yet.</p>`;
+    } else {
+      complaints.forEach(complaint => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="info"><strong>Tracking ID:</strong> ${complaint.trackingId}</div>
+          <div class="info"><strong>Service:</strong> ${complaint.service}</div>
+          <div class="info"><strong>Name:</strong> ${complaint.name}</div>
+          <div class="info"><strong>Address:</strong> ${complaint.address}</div>
+          <div class="info"><strong>Phone:</strong> ${complaint.phone}</div>
+          <div class="info"><strong>Email:</strong> ${complaint.email}</div>
+          <div class="info"><strong>Brand:</strong> ${complaint.brand}</div>
+          <div class="info"><strong>In Warranty:</strong> ${complaint.warranty}</div>
+          <div class="info"><strong>Complaint:</strong> ${complaint.complaint}</div>
+          <div class="status">✅ Status: ${complaint.status}</div>
+        `;
+        list.appendChild(card);
+      });
+    }
+  </script>
+
+</body>
+</html>

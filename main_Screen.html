@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home - Service Complaint Buddy</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    nav {
+      background: #1e40af;
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #dbeafe;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-title {
+      text-align: center;
+      font-weight: bold;
+      padding: 16px;
+      font-size: 18px;
+      background-color: #f8fafc;
+    }
+
+    footer {
+      background: #f0f0f0;
+      text-align: center;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🏠 Service Complaint Buddy</h1>
+    <p>Select a service to file a complaint</p>
+  </header>
+
+  <nav>
+    <a href="track.html">Track Complaint</a>
+    <a href="login.html">Logout</a>
+  </nav>
+
+  <main>
+    <div class="card" onclick="location.href='form.html?service=Washing Machine'">
+      <img src="images/WM.jpg" alt="Washing Machine Service">
+      <div class="card-title">Washing Machine Service</div>
+    </div>
+
+    <div class="card" onclick="location.href='form.html?service=Refrigerator'">
+      <img src="images/Fridge.jpg" alt="Refrigerator Service">
+      <div class="card-title">Refrigerator Service</div>
+    </div>
+
+    <div class="card" onclick="location.href='form.html?service=Microwave'">
+      <img src="images/microwave.jpg" alt="Microwave Service">
+      <div class="card-title">Microwave Service</div>
+    </div>
+
+    <div class="card" onclick="location.href='form.html?service=AC'">
+      <img src="images/ac.jpg" alt="Air Conditioner Service">
+      <div class="card-title">Air Conditioner Service</div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Service Complaint Buddy. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

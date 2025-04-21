@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Service Complaint Buddy</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #ffffff;
+      color: #333;
+    }
+    header, footer {
+      background: #f0f0f0;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #2563eb;
+    }
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 80vh;
+    }
+    .card {
+      max-width: 400px;
+      width: 100%;
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 12px 0 6px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 12px;
+    }
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+      background-color: #2563eb;
+      width: 100%;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .toggle-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .toggle-btn {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #f0f0f0;
+      transition: background-color 0.3s ease;
+    }
+    .toggle-btn.active {
+      background-color: #2563eb;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🔐 Login</h1>
+    <p>Login to access your complaint dashboard</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="toggle-container">
+        <button class="toggle-btn active" id="customerToggle" onclick="toggleLogin('customer')">Customer Login</button>
+        <button class="toggle-btn" id="adminToggle" onclick="toggleLogin('admin')">Admin Login</button>
+      </div>
+
+      <form id="loginForm">
+        <div id="loginFields">
+          <label for="phoneOrEmail">Phone Number</label>
+          <input type="tel" id="phoneOrEmail" required placeholder="Enter your phone number">
+
+          <label for="otpOrPassword">OTP</label>
+          <input type="password" id="otpOrPassword" required placeholder="Enter OTP">
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <div id="error" class="error"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Service Complaint Buddy. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let currentLoginType = 'customer'; // default
+
+    function toggleLogin(type) {
+      currentLoginType = type;
+
+      // Toggle button visuals
+      document.getElementById('customerToggle').classList.toggle('active', type === 'customer');
+      document.getElementById('adminToggle').classList.toggle('active', type === 'admin');
+
+      // Update field labels and types
+      const phoneOrEmail = document.getElementById('phoneOrEmail');
+      const otpOrPassword = document.getElementById('otpOrPassword');
+      const phoneLabel = document.querySelector('label[for="phoneOrEmail"]');
+      const otpLabel = document.querySelector('label[for="otpOrPassword"]');
+
+      if (type === 'admin') {
+        phoneLabel.textContent = 'Email';
+        phoneOrEmail.type = 'email';
+        phoneOrEmail.placeholder = 'Enter your email';
+        otpLabel.textContent = 'Password';
+        otpOrPassword.type = 'password';
+        otpOrPassword.placeholder = 'Enter password';
+      } else {
+        phoneLabel.textContent = 'Phone Number';
+        phoneOrEmail.type = 'tel';
+        phoneOrEmail.placeholder = 'Enter your phone number';
+        otpLabel.textContent = 'OTP';
+        otpOrPassword.type = 'password';
+        otpOrPassword.placeholder = 'Enter OTP';
+      }
+
+      // Clear fields on toggle
+      phoneOrEmail.value = '';
+      otpOrPassword.value = '';
+      document.getElementById('error').textContent = '';
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const idInput = document.getElementById("phoneOrEmail").value.trim();
+      const passInput = document.getElementById("otpOrPassword").value.trim();
+      const error = document.getElementById("error");
+
+      let isValid = false;
+
+      if (currentLoginType === 'customer') {
+        isValid = passInput === "123456" && idInput.length >= 10;
+      } else {
+        isValid = passInput === "admin123" && idInput.toLowerCase() === "admin@buddy.com";
+      }
+
+      if (isValid) {
+        error.textContent = "";
+        window.location.href = currentLoginType === 'customer' ? "main_Screen.html" : "admin_dashboard.html";
+      } else {
+        error.textContent = currentLoginType === 'customer'
+          ? "Invalid phone number or OTP."
+          : "Invalid email or password.";
+      }
+    });
+  </script>
+
+</body>
+</html>

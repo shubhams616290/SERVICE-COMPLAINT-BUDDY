@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Service Complaint Buddy</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    nav {
+      background-color: #2563eb;
+      padding: 15px 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    select, button.export-btn {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .card {
+      background: #fff;
+      margin-bottom: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    .info {
+      margin-bottom: 8px;
+    }
+
+    .info strong {
+      display: inline-block;
+      width: 150px;
+    }
+
+    .status {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .status.accepted {
+      color: green;
+    }
+
+    .status.rejected {
+      color: red;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .buttons button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .accept-btn {
+      background-color: #22c55e;
+      color: white;
+    }
+
+    .reject-btn {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .info strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h2>🛠️ Admin Dashboard</h2>
+    <a href="main_Screen.html">🏠 Home</a>
+  </nav>
+
+  <main>
+    <div class="controls">
+      <select id="sortBy">
+        <option value="phone">Sort by Phone</option>
+        <option value="trackingId">Sort by Tracking ID</option>
+      </select>
+
+      <select id="filterBy">
+        <option value="all">Show All</option>
+        <option value="Accepted">Accepted</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Pending">Pending</option>
+      </select>
+
+      <button class="export-btn" onclick="exportToCSV()">📄 Export to CSV</button>
+    </div>
+
+    <div id="complaintList"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Service Complaint Buddy. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const list = document.getElementById("complaintList");
+    const sortBy = document.getElementById("sortBy");
+    const filterBy = document.getElementById("filterBy");
+
+    let complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+
+    function sortComplaints(method) {
+      complaints.sort((a, b) => {
+        //if (method === "phone") return a.phone.localeCompare(b.phone);
+        if (method === "trackingId") return a.trackingId.localeCompare(b.trackingId);
+        return b.trackingId.split("CMP")[1] - a.trackingId.split("CMP")[1];
+      });
+    }
+
+    function updateStatus(index, status) {
+      complaints[index].status = status;
+      localStorage.setItem("complaints", JSON.stringify(complaints));
+      renderComplaints();
+    }
+
+    function renderComplaints() {
+      list.innerHTML = "";
+      const filter = filterBy.value;
+      complaints.forEach((complaint, index) => {
+        if (filter !== "all" && complaint.status !== filter) return;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="info"><strong>Tracking ID:</strong> ${complaint.trackingId}</div>
+          <div class="info"><strong>Service:</strong> ${complaint.service}</div>
+          <div class="info"><strong>Name:</strong> ${complaint.name}</div>
+          <div class="info"><strong>Address:</strong> ${complaint.address}</div>
+          <div class="info"><strong>Phone:</strong> ${complaint.phone}</div>
+          <div class="info"><strong>Email:</strong> ${complaint.email}</div>
+          <div class="info"><strong>Brand:</strong> ${complaint.brand}</div>
+          <div class="info"><strong>In Warranty:</strong> ${complaint.warranty}</div>
+          <div class="info"><strong>Complaint:</strong> ${complaint.complaint}</div>
+          <div class="status ${complaint.status === 'Accepted' ? 'accepted' : complaint.status === 'Rejected' ? 'rejected' : ''}">
+            Status: ${complaint.status || 'Pending'}
+          </div>
+          <div class="buttons">
+            <button class="accept-btn" onclick="updateStatus(${index}, 'Accepted')">Accept</button>
+            <button class="reject-btn" onclick="updateStatus(${index}, 'Rejected')">Reject</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function exportToCSV() {
+      let csv = 'Tracking ID,Service,Name,Address,Phone,Email,Brand,In Warranty,Complaint,Status\n';
+      complaints.forEach(c => {
+        csv += `${c.trackingId},${c.service},${c.name},${c.address},${c.phone},${c.email},${c.brand},${c.warranty},${c.complaint.replace(/\n/g, ' ')},${c.status || 'Pending'}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'complaints.csv';
+      link.click();
+    }
+
+    sortBy.addEventListener("change", () => {
+      sortComplaints(sortBy.value);
+      renderComplaints();
+    });
+
+    filterBy.addEventListener("change", renderComplaints);
+
+    sortComplaints("date");
+    renderComplaints();
+  </script>
+
+</body>
+</html>
